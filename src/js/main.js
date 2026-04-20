@@ -115,3 +115,125 @@ const updateScale = () => {
 // Initialize scale on load and resize
 window.addEventListener('resize', updateScale)
 updateScale()
+
+// ── Banner carousel ───────────────────────────────────────
+;(function () {
+  const carousel = $('#banner-carousel')
+  if (!carousel) return
+
+  const track     = carousel.querySelector('.banner-track')
+  const slides    = carousel.querySelectorAll('.banner-slide')
+  const prevBtn   = $('#banner-prev')
+  const nextBtn   = $('#banner-next')
+  const dotsWrap  = $('#banner-dots')
+
+  let current = 0
+  let timer   = null
+  const total = slides.length
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('button')
+    d.className = 'banner-dot' + (i === 0 ? ' active' : '')
+    d.setAttribute('aria-label', `Slide ${i + 1}`)
+    d.addEventListener('click', () => go(i))
+    dotsWrap?.appendChild(d)
+  })
+
+  const dots = () => dotsWrap?.querySelectorAll('.banner-dot')
+
+  const go = (idx) => {
+    current = (idx + total) % total
+    track.style.transform = `translateX(-${current * 100}%)`
+    dots()?.forEach((d, i) => d.classList.toggle('active', i === current))
+  }
+
+  const next = () => go(current + 1)
+  const prev = () => go(current - 1)
+
+  const start = () => { timer = setInterval(next, 10000) }
+  const stop  = () => clearInterval(timer)
+
+  prevBtn?.addEventListener('click', () => { stop(); prev(); start() })
+  nextBtn?.addEventListener('click', () => { stop(); next(); start() })
+
+  carousel.addEventListener('mouseenter', stop)
+  carousel.addEventListener('mouseleave', start)
+
+  // Touch swipe
+  let touchX = 0
+  carousel.addEventListener('touchstart', e => { touchX = e.touches[0].clientX }, { passive: true })
+  carousel.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX
+    if (Math.abs(dx) > 40) { stop(); dx < 0 ? next() : prev(); start() }
+  }, { passive: true })
+
+  start()
+})()
+
+// ── Testimonials carousel ─────────────────────────────────
+;(function () {
+  const wrap   = document.querySelector('#testi-carousel')
+  if (!wrap) return
+
+  const track    = wrap.querySelector('.testi-track')
+  const cards    = wrap.querySelectorAll('.testi-card')
+  const prevBtn  = $('#testi-prev')
+  const nextBtn  = $('#testi-next')
+  const dotsWrap = $('#testi-dots')
+
+  const total = cards.length
+  let current = 0
+
+  const visibleCount = () => window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+
+  const cardW = () => 100 / visibleCount()
+
+  const applyWidths = () => {
+    cards.forEach(c => { c.style.flex = `0 0 ${cardW()}%`; c.style.maxWidth = `${cardW()}%` })
+  }
+
+  // Build dots
+  const buildDots = () => {
+    if (!dotsWrap) return
+    dotsWrap.innerHTML = ''
+    const count = total - visibleCount() + 1
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('button')
+      d.className = 'testi-dot' + (i === 0 ? ' active' : '')
+      d.setAttribute('aria-label', `Depoimento ${i + 1}`)
+      d.addEventListener('click', () => go(i))
+      dotsWrap.appendChild(d)
+    }
+  }
+
+  const dots = () => dotsWrap?.querySelectorAll('.testi-dot')
+
+  const maxIdx = () => Math.max(0, total - visibleCount())
+
+  const go = (idx) => {
+    current = Math.min(Math.max(idx, 0), maxIdx())
+    track.style.transform = `translateX(-${current * cardW()}%)`
+    dots()?.forEach((d, i) => d.classList.toggle('active', i === current))
+  }
+
+  prevBtn?.addEventListener('click', () => go(current - 1))
+  nextBtn?.addEventListener('click', () => go(current + 1))
+
+  // Touch swipe
+  let touchX = 0
+  track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX }, { passive: true })
+  track.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX
+    if (Math.abs(dx) > 40) dx < 0 ? go(current + 1) : go(current - 1)
+  }, { passive: true })
+
+  const init = () => {
+    applyWidths()
+    buildDots()
+    go(0)
+  }
+
+  window.addEventListener('resize', init)
+  init()
+})()

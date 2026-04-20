@@ -329,5 +329,50 @@
          transition-colors duration-150;
 }
 
+/* ── Banner carousel ─────────────────────────────────── */
+.banner-carousel { @apply relative overflow-hidden; }
+
+.banner-track {
+  @apply flex;
+  transition: transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+.banner-slide { @apply flex-none w-full; }
+
+.banner-arrow {
+  @apply absolute top-1/2 -translate-y-1/2 z-20
+         w-10 h-10 rounded-full flex items-center justify-center
+         text-white cursor-pointer transition-all duration-150;
+  background: rgba(0,0,0,.25);
+}
+.banner-arrow:hover { background: rgba(0,0,0,.45); }
+
+.banner-dot {
+  @apply w-2 h-2 rounded-full cursor-pointer transition-all duration-300;
+  background: rgba(255,255,255,.45);
+}
+.banner-dot.active {
+  @apply w-5;
+  background: rgba(255,255,255,.95);
+}
+
+/* ── Testimonials carousel ───────────────────────────── */
+.testi-track {
+  @apply flex;
+  transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+.testi-card {
+  @apply flex-none bg-white rounded-2xl border border-gray-100
+         shadow-sm p-6 flex flex-col gap-4 mx-2;
+}
+
+.testi-dot {
+  @apply w-2 h-2 rounded-full cursor-pointer transition-all duration-300 bg-gray-300;
+}
+.testi-dot.active { @apply w-5 bg-red-700; }
+
+.testi-stars { @apply flex gap-0.5; }
+
 /* ── AOS overrides ────────────────────────────────────── */
 [data-aos] { will-change: transform, opacity; }
