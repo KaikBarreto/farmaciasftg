@@ -1,0 +1,315 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base ─────────────────────────────────────────────── */
+@layer base {
+  html { scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { @apply font-sans text-gray-900 bg-white antialiased; }
+  img { @apply max-w-full; }
+}
+
+/* ── Buttons ──────────────────────────────────────────── */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2.5 font-bold
+           transition-all duration-150 select-none cursor-pointer;
+  }
+
+  .btn-red {
+    @apply btn bg-red-700 hover:bg-red-800 active:bg-red-900 text-white
+           px-6 py-3.5 rounded-md shadow-md hover:shadow-lg;
+  }
+
+  .btn-yellow {
+    @apply btn bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-600 text-gray-900
+           px-6 py-3.5 rounded-md shadow-md hover:shadow-lg;
+  }
+
+  .btn-wa {
+    @apply btn text-white px-6 py-3.5 rounded-md shadow-md hover:shadow-lg;
+    background-color: #25D366;
+  }
+  .btn-wa:hover  { background-color: #22c55e; }
+  .btn-wa:active { background-color: #16a34a; }
+
+  .btn-white {
+    @apply btn bg-white hover:bg-gray-50 active:bg-gray-100 text-red-700
+           px-6 py-3.5 rounded-md shadow-md hover:shadow-lg;
+  }
+
+  .btn-outline-white {
+    @apply btn border-2 border-white text-white hover:bg-white hover:text-red-700
+           px-6 py-3.5 rounded-md;
+  }
+
+  /* ── Cards ──────────────────────────────────────────── */
+  .card {
+    @apply bg-white rounded-lg border border-gray-200
+           hover:border-red-200 hover:shadow-lg
+           transition-all duration-200;
+  }
+
+  /* ── Section titles ─────────────────────────────────── */
+  .sec-tag {
+    @apply inline-block text-xs font-black uppercase tracking-widest
+           text-red-700 border-l-4 border-red-700 pl-3 mb-4;
+  }
+
+  .sec-title {
+    @apply text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight;
+  }
+
+  .sec-sub {
+    @apply text-gray-500 text-base mt-2 max-w-2xl leading-relaxed;
+  }
+
+  /* ── Label chips (real pharmacy style) ──────────────── */
+  .chip-red   { @apply inline-block bg-red-700 text-white text-xs font-black uppercase px-3 py-1 rounded-sm; }
+  .chip-yellow { @apply inline-block bg-yellow-500 text-gray-900 text-xs font-black uppercase px-3 py-1 rounded-sm; }
+  .chip-dark  { @apply inline-block bg-gray-900 text-white text-xs font-black uppercase px-3 py-1 rounded-sm; }
+}
+
+/* ── Header ───────────────────────────────────────────── */
+#header {
+  @apply fixed top-0 left-0 right-0 z-50 bg-red-700;
+  transition: box-shadow 0.2s;
+}
+
+#header.scrolled { @apply shadow-xl; }
+
+.nav-link {
+  @apply text-white/90 font-semibold text-sm
+         hover:text-yellow-400 transition-colors duration-150
+         relative pb-0.5;
+}
+
+.nav-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-200;
+}
+.nav-link:hover::after { @apply w-full; }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero-content {
+  animation: fadeUp 0.7s ease-out both;
+}
+.hero-img {
+  animation: fadeUp 0.7s 0.15s ease-out both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Category pills (pharmacy style) ─────────────────── */
+.cat-pill {
+  @apply flex flex-col items-center gap-1.5 cursor-pointer
+         text-gray-700 hover:text-red-700 transition-colors duration-150;
+}
+
+.cat-icon-wrap {
+  @apply w-14 h-14 md:w-16 md:h-16 rounded-full bg-gray-100
+         flex items-center justify-center text-2xl
+         border-2 border-transparent
+         hover:border-red-700 hover:bg-red-50
+         transition-all duration-150;
+}
+
+/* ── Differentials ───────────────────────────────────── */
+.diff-number {
+  @apply text-5xl font-black text-red-700 leading-none mb-1;
+}
+
+/* ── Promo banner (pharmacy-style) ───────────────────── */
+.promo-banner {
+  @apply bg-hero-pattern text-white relative overflow-hidden;
+}
+
+/* ── FAQ ──────────────────────────────────────────────── */
+.faq-btn {
+  @apply w-full flex items-center justify-between gap-4
+         px-5 py-4 text-left font-semibold text-gray-900 text-sm md:text-base
+         hover:bg-gray-50 transition-colors duration-150;
+}
+
+.faq-body {
+  @apply hidden px-5 pb-5 text-gray-600 text-sm leading-relaxed
+         border-t border-gray-100;
+}
+
+.faq-item.open .faq-body { @apply block; }
+
+.faq-chevron {
+  @apply w-5 h-5 text-red-700 flex-shrink-0 transition-transform duration-200;
+}
+.faq-item.open .faq-chevron { @apply rotate-180; }
+
+/* ── Partner logos ────────────────────────────────────── */
+.partner-logo {
+  @apply px-6 py-3 border border-gray-200 bg-white rounded
+         flex items-center justify-center
+         font-black text-sm tracking-tight
+         hover:border-red-300 transition-colors duration-150;
+}
+
+/* ── Service cards (pharmacy product style) ──────────── */
+.svc-card {
+  @apply card p-5 flex flex-col items-center text-center gap-2;
+}
+
+.svc-icon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center mb-1
+         bg-red-700 text-white text-xl flex-shrink-0;
+}
+
+/* ── City tag ─────────────────────────────────────────── */
+.city-tag {
+  @apply flex items-center gap-2 text-sm font-semibold text-gray-700
+         bg-white border border-gray-200 rounded px-4 py-2.5
+         hover:border-red-400 hover:text-red-700 transition-all duration-150;
+}
+
+/* ── Trust row ────────────────────────────────────────── */
+.trust-item {
+  @apply flex items-start gap-3 p-5 bg-white rounded-lg border border-gray-200;
+}
+
+.trust-icon {
+  @apply w-10 h-10 rounded-md bg-red-700 text-white
+         flex items-center justify-center flex-shrink-0;
+}
+
+/* ── WhatsApp float — wrapper + tooltip + button ─────── */
+.wa-wrapper {
+  position: fixed;
+  bottom: 22px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Tooltip: "Respondemos em até 5 min" */
+.wa-tooltip {
+  background: #fff;
+  border-radius: 100px;
+  padding: 9px 16px 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.14);
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  animation: waTooltipIn 0.45s 1.2s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes waTooltipIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.wa-dot {
+  width: 9px;
+  height: 9px;
+  background: #25D366;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: waDot 2s ease-in-out infinite;
+}
+
+@keyframes waDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* Main button */
+.wa-btn {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 6px 22px rgba(37,211,102,.45);
+  transition: transform .15s, box-shadow .15s;
+  flex-shrink: 0;
+}
+
+.wa-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 28px rgba(37,211,102,.6);
+}
+
+/* Pulse ring behind the button */
+.wa-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25D366;
+  opacity: 0.28;
+  animation: waRing 2.6s ease-out infinite;
+}
+
+@keyframes waRing {
+  0%   { transform: scale(1);   opacity: 0.28; }
+  80%  { transform: scale(1.75); opacity: 0; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+
+/* Notification badge "1" */
+.wa-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 21px;
+  height: 21px;
+  background: #cc0000;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid #fff;
+  animation: badgePop 0.4s 1.8s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+@keyframes badgePop {
+  from { transform: scale(0) rotate(-15deg); }
+  to   { transform: scale(1) rotate(0deg); }
+}
+
+/* ── js-scale (vertical carousel animation) ──────────── */
+.js-scale {
+  will-change: transform;
+  transform-origin: center center;
+}
+
+/* ── Scroll progress bar ─────────────────────────────── */
+#progress {
+  @apply fixed top-0 left-0 h-0.5 bg-red-700 z-[100];
+  width: 0;
+}
+
+/* ── Mobile menu ──────────────────────────────────────── */
+#mobile-nav { @apply hidden flex-col; }
+#mobile-nav.open { @apply flex; }
+.mob-link {
+  @apply block px-5 py-3 text-sm font-semibold text-white/90
+         border-b border-red-800 hover:bg-red-800 hover:text-yellow-400
+         transition-colors duration-150;
+}
+
+/* ── AOS overrides ────────────────────────────────────── */
+[data-aos] { will-change: transform, opacity; }
