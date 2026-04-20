@@ -155,14 +155,32 @@
          hover:border-red-300 transition-colors duration-150;
 }
 
-/* ── Service cards (pharmacy product style) ──────────── */
-.svc-card {
-  @apply card p-5 flex flex-col items-center text-center gap-2;
+/* ── Product cards (e-commerce style) ───────────────── */
+.prod-card {
+  @apply bg-white rounded-xl border border-gray-200
+         hover:shadow-xl hover:border-red-200
+         transition-all duration-200 flex flex-col overflow-hidden relative;
 }
 
-.svc-icon {
-  @apply w-12 h-12 rounded-lg flex items-center justify-center mb-1
-         bg-red-700 text-white text-xl flex-shrink-0;
+.prod-frete {
+  @apply absolute top-2.5 left-2.5 z-10 text-[11px] font-black text-white px-2 py-0.5 rounded;
+  background: #20b2aa;
+}
+
+.prod-off-tag {
+  @apply inline-flex items-center text-[11px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded leading-none;
+}
+
+.prod-de {
+  @apply text-xs text-gray-400 line-through leading-none;
+}
+
+.prod-por {
+  @apply text-lg font-black text-gray-900 leading-tight;
+}
+
+.prod-pix {
+  @apply text-base font-black text-red-700 leading-tight;
 }
 
 /* ── City tag ─────────────────────────────────────────── */

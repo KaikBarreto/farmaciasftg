@@ -27,7 +27,7 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       backgroundImage: {
-        'hero-pattern': '#cc0000',
+        'hero-pattern': 'linear-gradient(to bottom right, #cc0000 0%, #cc0000 100%)',
         'promo-pattern': 'linear-gradient(135deg, #8a0000 0%, #cc0000 100%)',
       },
     },
