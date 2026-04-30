@@ -171,69 +171,120 @@ updateScale()
   start()
 })()
 
-// ── Testimonials carousel ─────────────────────────────────
+// ── Testimonials carousel (infinite clone-based) ──────────
 ;(function () {
   const wrap   = document.querySelector('#testi-carousel')
   if (!wrap) return
 
   const track    = wrap.querySelector('.testi-track')
-  const cards    = wrap.querySelectorAll('.testi-card')
   const prevBtn  = $('#testi-prev')
   const nextBtn  = $('#testi-next')
   const dotsWrap = $('#testi-dots')
 
-  const total = cards.length
-  let current = 0
+  const origCards = Array.from(track.querySelectorAll('.testi-card'))
+  const total     = origCards.length
+  let current     = 0  // index into full cloned list; set to vc after setup
+  let timer       = null
 
-  const visibleCount = () => window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+  const vc      = () => window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+  const cardW   = () => 100 / vc()
+  const allCards = () => Array.from(track.querySelectorAll('.testi-card'))
 
-  const cardW = () => 100 / visibleCount()
-
-  const applyWidths = () => {
-    cards.forEach(c => { c.style.flex = `0 0 ${cardW()}%`; c.style.maxWidth = `${cardW()}%` })
+  const setupClones = () => {
+    track.querySelectorAll('.testi-clone').forEach(c => c.remove())
+    const v = vc()
+    // prepend clones of last v originals
+    for (let i = total - v; i < total; i++) {
+      const cl = origCards[i].cloneNode(true)
+      cl.classList.add('testi-clone')
+      track.insertBefore(cl, track.firstChild)
+    }
+    // append clones of first v originals
+    for (let i = 0; i < v; i++) {
+      const cl = origCards[i].cloneNode(true)
+      cl.classList.add('testi-clone')
+      track.appendChild(cl)
+    }
+    allCards().forEach(c => {
+      c.style.flex = `0 0 ${cardW()}%`
+      c.style.maxWidth = `${cardW()}%`
+    })
+    current = v
+    track.style.transition = 'none'
+    track.style.transform  = `translateX(-${current * cardW()}%)`
   }
 
-  // Build dots
   const buildDots = () => {
     if (!dotsWrap) return
     dotsWrap.innerHTML = ''
-    const count = total - visibleCount() + 1
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < total; i++) {
       const d = document.createElement('button')
-      d.className = 'testi-dot' + (i === 0 ? ' active' : '')
+      d.className = 'testi-dot'
       d.setAttribute('aria-label', `Depoimento ${i + 1}`)
-      d.addEventListener('click', () => go(i))
+      d.addEventListener('click', () => { stop(); goToReal(i); start() })
       dotsWrap.appendChild(d)
     }
   }
 
-  const dots = () => dotsWrap?.querySelectorAll('.testi-dot')
-
-  const maxIdx = () => Math.max(0, total - visibleCount())
-
-  const go = (idx) => {
-    current = Math.min(Math.max(idx, 0), maxIdx())
-    track.style.transform = `translateX(-${current * cardW()}%)`
-    dots()?.forEach((d, i) => d.classList.toggle('active', i === current))
+  const updateDots = () => {
+    const v       = vc()
+    const realIdx = ((current - v) % total + total) % total
+    dotsWrap?.querySelectorAll('.testi-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === realIdx))
   }
 
-  prevBtn?.addEventListener('click', () => go(current - 1))
-  nextBtn?.addEventListener('click', () => go(current + 1))
+  const go = (idx) => {
+    current = idx
+    track.style.transition = 'transform 0.5s cubic-bezier(.4,0,.2,1)'
+    track.style.transform  = `translateX(-${current * cardW()}%)`
+    updateDots()
+  }
 
-  // Touch swipe
+  const goToReal = (realIdx) => go(vc() + realIdx)
+
+  track.addEventListener('transitionend', () => {
+    const v = vc()
+    if (current < v) {
+      track.style.transition = 'none'
+      current += total
+      track.style.transform  = `translateX(-${current * cardW()}%)`
+    } else if (current >= v + total) {
+      track.style.transition = 'none'
+      current -= total
+      track.style.transform  = `translateX(-${current * cardW()}%)`
+    }
+  })
+
+  const next  = () => go(current + 1)
+  const prev  = () => go(current - 1)
+  const start = () => { timer = setInterval(next, 4500) }
+  const stop  = () => clearInterval(timer)
+
+  prevBtn?.addEventListener('click', () => { stop(); prev(); start() })
+  nextBtn?.addEventListener('click', () => { stop(); next(); start() })
+
+  wrap.addEventListener('mouseenter', stop)
+  wrap.addEventListener('mouseleave', start)
+
   let touchX = 0
   track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX }, { passive: true })
   track.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchX
-    if (Math.abs(dx) > 40) dx < 0 ? go(current + 1) : go(current - 1)
+    if (Math.abs(dx) > 40) { stop(); dx < 0 ? next() : prev(); start() }
   }, { passive: true })
 
   const init = () => {
-    applyWidths()
+    setupClones()
     buildDots()
-    go(0)
+    updateDots()
   }
 
-  window.addEventListener('resize', init)
+  let resizeTimer
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(() => { stop(); init(); start() }, 150)
+  })
+
   init()
+  start()
 })()
