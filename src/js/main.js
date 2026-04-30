@@ -116,27 +116,26 @@ const updateScale = () => {
 window.addEventListener('resize', updateScale)
 updateScale()
 
-// ── Banner carousel ───────────────────────────────────────
-;(function () {
-  const carousel = $('#banner-carousel')
+// ── Banner carousels (generic) ────────────────────────────
+const initBannerCarousel = ({ carouselId, trackSel, prevId, nextId, dotsId, interval = 10000 }) => {
+  const carousel = document.getElementById(carouselId)
   if (!carousel) return
 
-  const track     = carousel.querySelector('.banner-track')
-  const slides    = carousel.querySelectorAll('.banner-slide')
-  const prevBtn   = $('#banner-prev')
-  const nextBtn   = $('#banner-next')
-  const dotsWrap  = $('#banner-dots')
+  const track    = carousel.querySelector(trackSel)
+  const slides   = carousel.querySelectorAll('.banner-slide')
+  const prevBtn  = document.getElementById(prevId)
+  const nextBtn  = document.getElementById(nextId)
+  const dotsWrap = document.getElementById(dotsId)
 
   let current = 0
   let timer   = null
   const total = slides.length
 
-  // Build dots
   slides.forEach((_, i) => {
     const d = document.createElement('button')
     d.className = 'banner-dot' + (i === 0 ? ' active' : '')
     d.setAttribute('aria-label', `Slide ${i + 1}`)
-    d.addEventListener('click', () => go(i))
+    d.addEventListener('click', () => { stop(); go(i); start() })
     dotsWrap?.appendChild(d)
   })
 
@@ -150,8 +149,7 @@ updateScale()
 
   const next = () => go(current + 1)
   const prev = () => go(current - 1)
-
-  const start = () => { timer = setInterval(next, 10000) }
+  const start = () => { timer = setInterval(next, interval) }
   const stop  = () => clearInterval(timer)
 
   prevBtn?.addEventListener('click', () => { stop(); prev(); start() })
@@ -160,7 +158,6 @@ updateScale()
   carousel.addEventListener('mouseenter', stop)
   carousel.addEventListener('mouseleave', start)
 
-  // Touch swipe
   let touchX = 0
   carousel.addEventListener('touchstart', e => { touchX = e.touches[0].clientX }, { passive: true })
   carousel.addEventListener('touchend', e => {
@@ -169,7 +166,25 @@ updateScale()
   }, { passive: true })
 
   start()
-})()
+}
+
+initBannerCarousel({
+  carouselId: 'ecom-carousel',
+  trackSel:   '.banner-track',
+  prevId:     'ecom-prev',
+  nextId:     'ecom-next',
+  dotsId:     'ecom-dots',
+  interval:   3500,
+})
+
+initBannerCarousel({
+  carouselId: 'banner-carousel',
+  trackSel:   '.banner-track',
+  prevId:     'banner-prev',
+  nextId:     'banner-next',
+  dotsId:     'banner-dots',
+  interval:   10000,
+})
 
 // ── Testimonials carousel (infinite clone-based) ──────────
 ;(function () {
