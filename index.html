@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="/assets/images/logo-ftg.png">
+  <link rel="preload" as="image" href="/assets/images/image.png" fetchpriority="high">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
   <!-- Critical CSS inline -->
@@ -199,6 +200,8 @@
              alt="Farmacêutico FTG atendendo com cuidado"
              class="absolute inset-0 w-full h-full object-cover object-center rounded-l-2xl"
              loading="eager"
+             fetchpriority="high"
+             decoding="async"
              width="480" height="600">
         <!-- gradient overlay at bottom -->
         <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/40 to-transparent rounded-l-2xl"></div>

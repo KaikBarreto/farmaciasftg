@@ -93,15 +93,20 @@
 
 /* ── Hero ─────────────────────────────────────────────── */
 .hero-content {
-  animation: fadeUp 0.7s ease-out both;
+  animation: slideInLeft 0.85s cubic-bezier(.22,.61,.36,1) both;
 }
 .hero-img {
-  animation: fadeUp 0.7s 0.15s ease-out both;
+  animation: slideInRight 0.85s 0.1s cubic-bezier(.22,.61,.36,1) both;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-44px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(44px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* ── Category pills (pharmacy style) ─────────────────── */
